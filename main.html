@@ -15,9 +15,9 @@
         let canvas = document.getElementById('theCanvas');
         let ctx = canvas.getContext('2d');
         let shapeDiv = document.getElementById('shapeDiv');
-        const network = new Network(255, 64, 1);
+        const network = new Network(255, 256,64,1);
         let setSize = 100;
-        let setNumber = 0;
+        let setNumber = 1;
         let dataSet = [];
         let expectedResults=[];
         mainLoop();
@@ -36,7 +36,7 @@
                 let h = side;
                 ctx.fillStyle = '#f00';
                 ctx.fillRect(x, y, w, h);
-                shapeDiv.innerText = `square ${x},${y},${x + w},${y + h}`;
+                shapeDiv.innerText = `Iteration# ${setNumber} square (${x}, ${y}) (${x + w}, ${y + h})`;
                 expectedResults.push (0);
             } else {
                 let r = Math.round(Math.random() * 5) + 2;
@@ -47,27 +47,25 @@
                 ctx.arc(x, y, r, 0, Math.PI * 2);
                 ctx.fillStyle = '#f00';
                 ctx.fill();
-                shapeDiv.innerText = `circle ${x},${y},${r}`;
+                shapeDiv.innerText = `Iteration# ${setNumber} circle (${x}, ${y}) : ${r}`;
                 expectedResults.push (1);
             }
             //get the pixel data, add it to the set..
             let data = readData(ctx);
             dataSet.push(data);
             //show it in a table in the div..
-            let newTableElement = makeInputTable(data);
-            let inputDiv = document.getElementById('inputDiv');
-            if (inputDiv.children.length > 0) {
-                //won't be there on the first loop.
-                let oldTableElement = inputDiv.children[0];//should only have 1 child.
-                oldTableElement.remove();
-            }
-            inputDiv.appendChild(newTableElement);
+            makeInputTable(data); //This refreshes every loop showing the values of the individual canvas pixels.
             //Are we done building the set? If so we can test with it.
             if (setSize === setNumber) {
-                //Then plug in the neural network and train it to recognize one of the 
-                //two shapes..
-                trainNetwork(network, dataSet, 0.1, 20, expectedResults);
+                //train the network to recognize one of the two shapes..
+                shapeDiv.innerText = `Training Network`;
+                let then = new Date();
+                trainNetwork(network, dataSet, 0.1, 200, expectedResults);
+                let now = new Date();
+                let delta = now-then;
+                shapeDiv.innerText = `Training completed in ${delta}ms.`;
                 //TODO: show the training epochs in a table in the trainingDiv.
+                makeOutputTable();
             } else {
                 //Keep generating the set.
                 setNumber++;
@@ -85,6 +83,7 @@
             }
             return data;
         }
+        //Will make an HTML Table that shows the values drawn in the canvas.
         function makeInputTable(data) {
             let table = document.createElement('table');
             for (let row = 0; row < 16; row++) {
@@ -100,7 +99,16 @@
                 }
                 table.appendChild(rowElement);
             }
-            return table;
+            let inputDiv = document.getElementById('inputDiv');
+            if (inputDiv.children.length > 0) {
+                //won't be there on the first loop.
+                let oldTableElement = inputDiv.children[0];//should only have 1 child.
+                oldTableElement.remove();
+            }
+            inputDiv.appendChild(table);            
+        }
+        function makeOutputTable (data){
+
         }
     </script>
 </body>
