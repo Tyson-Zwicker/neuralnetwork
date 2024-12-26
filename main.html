@@ -1,0 +1,96 @@
+<html>
+
+<head>
+    <title>Network Test</title>
+</head>
+
+<body>
+    <script src="./network.js"></script>
+    <h3>Neural Network Trainer</h3>
+    <canvas id="theCanvas" width=16 height=16 style="background-color:black;"></canvas>
+    <div id="shapeDiv" style="font:20px monospace"></div>
+    <div id="inputDiv" style="font:12px monospace"></div><br>
+    <div id="trainingDiv" style="font:12px monospace"></div>
+    <script>
+        let canvas = document.getElementById('theCanvas');
+        let ctx = canvas.getContext('2d');
+        let shapeDiv = document.getElementById('shapeDiv');
+        let network = new Network (255,255,2);
+        mainLoop();
+
+
+        function mainLoop() {
+           
+            //clear the canvas
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, 16, 16)
+            //Draw some random rect (or circle) in the canvas.
+            if (Math.random() > 0.5) {
+                let x = Math.round(Math.random() * 14);
+                let y = Math.round(Math.random() * 14);
+                let side = 2 + Math.round(Math.random() * Math.min(14 - x, 14 - y));
+                let w = side;
+                let h = side;
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(x, y, w, h);
+                shapeDiv.innerText = `square ${x},${y},${x + w},${y + h}`;
+            } else {
+                let r = Math.round(Math.random() * 5) + 2;
+                let wiggle = Math.round(16 - r * 2);
+                let x = r + Math.round(Math.random() * wiggle);
+                let y = r + Math.round(Math.random() * wiggle);
+                ctx.beginPath();
+                ctx.arc(x, y, r, 0, Math.PI * 2);
+                ctx.fillStyle = '#f00';
+                ctx.fill();
+                shapeDiv.innerText = `circle ${x},${y},${r}`;
+            }
+            //get the pixel data and show it in a table in the div..
+            let data = readData(ctx);
+            let newTableElement = makeInputTable(data);
+            let inputDiv = document.getElementById('inputDiv');
+            if (inputDiv.children.length > 0) {
+                //won't be there on the first loop.
+                let oldTableElement = inputDiv.children[0];//should only have 1 child.
+                oldTableElement.remove();
+            }
+            inputDiv.appendChild(newTableElement);
+
+            //Then plug in the neural network and train it to recognize one of the 
+            //two shapes..
+            //network.trainNetwork (network, data, 0.1, 20, expectedOutput);
+            //and show the training epochs in another table.
+
+            window.setTimeout(mainLoop, 300);
+        }
+        function readData(context) {
+            let data = [];
+            for (let y = 0; y < 16; y++) {
+                for (let x = 0; x < 16; x++) {
+                    //gets red value..
+                    data[y * 16 + x] = context.getImageData(x, y, 1, 1).data[0];
+                }
+            }
+            return data;
+        }
+        function makeInputTable(data) {
+            let table = document.createElement('table');
+            for (let row = 0; row < 16; row++) {
+                let rowElement = document.createElement('tr');
+                for (let col = 0; col < 16; col++) {
+                    let elementData = data[row * 16 + col];
+                    let cellElement = document.createElement('td');
+                    if (elementData > 0) {
+                        cellElement.style = 'background-color:yellow';
+                    }
+                    cellElement.innerText = elementData.toString().padStart(3, '0');//.padStart (3,'0');
+                    rowElement.appendChild(cellElement);
+                }
+                table.appendChild(rowElement);
+            }
+            return table;
+        }
+    </script>
+</body>
+
+</html>
