@@ -85,14 +85,14 @@ const backwardPropigate = function (network, expected) {
     //Starting at the output layer and working backwards to the first
     // hidden layer..
     let isOutputLayer = true;
-    for (let i = network.layers.length - 1; i >= 0; i++) {
+    for (let i = network.layers.length - 1; i >= 0; i--) {
         let layer = network.layers[i];
         //"errors" will hold the total amount of error attribate to each
         //neuron in this layer.
         let errors = [];
-        if (!isOutputLayer) {
+        if (isOutputLayer) {
             //process each neuron in output layer
-            for (let j = 0; j < layer[j].length; j++) {
+            for (let j = 0; j < layer.length; j++) {
                 let neuron = layer[j];
                 //In the case of the output layer, the "next last" layer is the 
                 //expected output, not another neuron.
@@ -100,12 +100,15 @@ const backwardPropigate = function (network, expected) {
             }
         } else {
             //process each neuron in this hidden layer
-            for (let j = 0; j < layer[j].length; j++) {
+            if (!layer){
+                throw new Error (`layer #${i} is ${layer} #layers ${network.layers.length}`);
+            }
+            for (let j = 0; j < layer.length; j++) {
                 let neuron = layer[j];
                 let error = 0;
                 //In the case of a hidden layer, the last layer is a layer
                 // of neurons
-                let lastLayer = Network.layers[i + 1];
+                let lastLayer = network.layers[i + 1];
                 //add to "this" neurons error by:
                 //looking at all the neurons in the next layer and summing up
                 //the product of how wrong it made each of them and 
@@ -119,8 +122,8 @@ const backwardPropigate = function (network, expected) {
         }
         //Last step is we assign that list of errors that was just generated
         //to each of this neurons "error"
-        for (let j = 0; j < layer.length; j++) {
-            let neuron = layer[j];
+        for (let j = 0; j < network.layers.length; j++) {
+            let neuron = network.layers[j];
             neuron.error = errors[j] * sigmoidDerivative(neuron.output);
         }
         isOutputLayer = false;
@@ -131,21 +134,21 @@ const updateWeights = function (network, datasetRow, learningRate) {
         let layer = network.layers[i];
         let inputs = undefined;
         if (i === 0) {
-            datasetRow; //start with the input data
-        }else{
-            inputs = [];
-            let lastLayer = network.layers[i-1];
+            inputs = datasetRow; //start with the input data
+        } else {
+            inputs = []; //build inputs for next layer from  last layer..
+            let lastLayer = network.layers[i - 1];
             for (let j = 0; j < lastLayer.length; j++) {
                 let nextLayerNeuron = lastLayer[j];
-                inputs.push (lastLayer[j].output);
+                inputs.push(lastLayer[j].output);
             }
         }
-        for (let j=0;j<layer.length;j++){
+        for (let j = 0; j < layer.length; j++) {
             let neuron = layer[j];
-            for (let k =0;k<inputs.length;k++){
+            for (let k = 0; k < inputs.length; k++) {
                 neuron.weights[j] -= learningRate * neuron.error * inputs[k];
             }
-            neuron.weight.bias -=learningRate * neuron.error;
+            neuron.bias -= learningRate * neuron.error;
         }
     }
 }
@@ -155,21 +158,21 @@ const updateWeights = function (network, datasetRow, learningRate) {
 //down!
 const trainNetwork = function (network, dataset, learningRate, numEpochs,
     expectedOutput) {
-    let errorRates=[];
+    let errorRates = [];
     for (let epoch = 0; epoch < numEpochs; epoch++) {
         let sumError = 0;
         dataset.forEach(row => {
             let outputs = forwardPropigate(network, row);
-            //TODO: compare outputs to expepected output
+            //TODO: compare outputs to expected output
             //add the SQUARE of the difference to sumerror
-            for (let i =0;i<expectedOutput.length;i++){
+            for (let i = 0; i < expectedOutput.length; i++) {
 
             }
             sumError += (outputs)
             backwardPropigate(network, expectedOutput);
             updateWeights(network, row, learningRate);
         });
-        errorRates.push (sumError)
+        errorRates.push(sumError)
     }
     return errorRates;
 }
