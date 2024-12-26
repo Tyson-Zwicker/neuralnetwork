@@ -6,25 +6,51 @@ const Tabler = function () {
 //"columns" if defined, will treat the array as 1 dimesional and 
 //display "column" entries per row.
 //two dimensional arrays will automatically by shown in row&column
-Tabler.prototype.arrayToHTML = function (array, columns) {
-    let table = this.getEmpyTableElement();
+Tabler.prototype.arrayToHTML = function (title, array, columns) {
+    let table = this.getEmpyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
+        //one dimensional needs to be split into rows..
         let rowElement = this.getEmptyRowElement();
         let column = 0;
         for (let i = 0; i < array.length; i++) {
-            let dataElement = this.getEmptyDataElement();
-            dataElement.innerText = array[i];
             if (column === columns) {
                 table.appendChild(rowElement);
-                row = this.getEmptyRowElement();
+                rowElement = this.getEmptyRowElement();
                 column = 0;
             }
+            let dataElement = this.getEmptyDataElement();
+            dataElement.innerText = array[i];            
             rowElement.appendChild(dataElement);
+            column++;
         }
-        if (column>0) {
-            table.appendChild (rowElement);
+        if (column > 0) {
+            table.appendChild(rowElement);
         }
-    } 
+    } else {
+        if (!Array.isArray[array[0]]) {
+            //Simple 1 dimension..
+            for (let i = 0; i < array.length; i++) {
+                let rowElement = this.getEmptyRowElement();
+                let dataElement = this.getEmptyDataElement();
+                dataElement.innerText = array[i];
+                rowElement.appendChild(dataElement);
+                table.appendChild(rowElement);
+            }
+        } else {
+            //2 dimensional..
+            for (let i = 0; i < array.length; i++) {
+                let rowElement = this.getEmptyRowElement();
+                for (let j = 0; j < array[i].length; j++) {
+                    let dataElement = this.getEmptyDataElement();
+                    dataElement.innerText = array[i];
+
+                }
+                rowElement.appendChild(dataElement);
+            }
+            table.appendChild(row);
+        }
+    }
+    return table;
 }
 
 Tabler.prototype.objectToHTML = function (title, objectList, columnNames) {
