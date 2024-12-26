@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>
+            Tabler tests..
+        </title>
+    </head>
+<body>
+    <h3>Object Tabler tests..</h3>
+    <div id="test1Div" style="font:12px monospace"> </div>
+    <div id="test2Div" style="font:12px monospace"> </div>
+    <script src = './tabler.js'></script>
+    <script>
+
+        let tabler = new Tabler ();
+        let test1data = [
+            {"name":"Abby","age": 19},
+            {"name":"Breanne","age": 32},
+            {"name":"Cindy","age": 6},
+            {"name":"Debby","age": 43},
+            {"name":"Emily","age": 25},
+            {"name":"Freya","age": 28},           
+        ];
+        let test1properties=['name','age'];
+        let test1Div = document.getElementById ('test1Div');
+        tabler.title = 'Test #1';        
+        test1Div.appendChild (tabler.objectToHTML('Test #1',test1data,test1properties));
+
+        let test2data = [
+            {"name":"Abby","age": 19, "employer": "Paper Co.", "title":"Intern", "fulltime":false},
+            {"name":"Breanne","age": 32, "employer": "Hualing Inc.", "title":"Driver","fulltime":true},
+            {"name":"Cindy","age": 6, "employer": "BigHill Elementary", "title":"Student","fulltime":true},
+            {"name":"Debby","age": 43, "employer": "Goverment", "title":"IT Tech","fulltime":true},
+            {"name":"Emily","age": 25, "employer": "NFD", "title":"Fire Fighter","fulltime":false},
+            {"name":"Freya","age": 28, "employer": "BC EMS", "title":"EMT","fulltime":true},
+            {"name":"Gina","age": 34, "employer": "None", "title":"Cindy's Mom","fulltime":true},           
+        ];
+        let test2properties=['name','age',"employer","title","fulltime"];
+        tabler.title = 'Test #2: bools?'        
+        let test2Div = document.getElementById ('test2Div');
+        test2Div.appendChild (tabler.objectToHTML("Test #2",test2data,test2properties));
+    </script>
+</body>
+    </html>
