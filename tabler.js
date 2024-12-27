@@ -4,7 +4,7 @@
 const Tabler = function () {
 }
 //"columns" if defined, will treat the array as 1 dimesional and 
-//display "column" entries per row.
+//break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row&column
 Tabler.prototype.arrayToHTML = function (title, array, columns) {
     let table = this.getEmpyTableElement(title);
