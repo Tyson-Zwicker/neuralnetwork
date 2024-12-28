@@ -4,29 +4,47 @@
     <title>NeuralNet Test</title>
 </head>
 
-<body>
-    <div id = "controlDiv"></div>   
+<body onload="doit();">
+    <div id="controlDiv"></div>
     <!--just add another div for every step.. and show the layers as a table with all node propeties as columns, and also input and expected..-->>
     <script src="./tabler.js"></script>
     <script src="./network.js"></script>
     <script>
-        let body = document.getElementsByTagName ('body')[0];
-        let tabler = new Tabler();
-        //make it figure out even or odd by giving to numbers that sum..
-        //input 
-        let inputs = [];
-        let expected = [];
-        for (let i=0;i<5;i++){
-            for (let j=0;j<5;j++){
-                //two input neurons encode two numbers between 0 and 5
-                inputs.push ([i/5,j/5]);
-                //expected result is encoded as two nuerons, the first means even, the second means odd.
-                expected = (i+j%2==0)? [1,0]:[0,1];
+        let x = 1;
+        function doit() {
+            let body = document.getElementsByTagName('body')[0];
+            let tabler = new Tabler();
+            //make it figure out even or odd by giving to numbers that sum..
+            let inputs = [];
+            let expected = [];
+            for (let i = 0; i < 5; i++) {
+                for (let j = 0; j < 5; j++) {
+                    //two input neurons encode two numbers between 0 and 5
+                    inputs.push([i / 5, j / 5]);
+                    //expected result is encoded as two nuerons, the first means even, the second means odd.
+                    expected = (i + j % 2 == 0) ? [1, 0] : [0, 1];
+                }
             }
+            let network = new Network(2, 8, 2);
+            //Show initial
+            drawNetwork(network);
+            //Forward prop
+            forwardPropigate (network, inputs);
+            drawNetwork(network);
+            //back prop
+            //adjust weight
         }
-        let network = new Network (2,8,2);
 
-        
+        function drawNetwork(network) {
+            let div = document.createElement('div');
+            let inputTable = tabler.arrayToHTML(inputs);
+            div.appendChild(inputTable);
+            network.layers.forEach (layer=>{
+                let layerTable = tabler.objectToHTML (layer);
+                div.appendChild (layerTable);
+            });
+            let expectedTable = tabler.arrayToHTML (expected);
+        }
     </script>
 </body>
 
