@@ -1,0 +1,18 @@
+let tabler = new Tabler();
+
+tabler.arrayToHTML (title, array, columns)
+ 
+    This will show a 1 or 2 D array.
+    "columns" is optional. If provided, and the array is one dimensional,
+    it will print the array as a grid, with the specified number of columns.
+    Ex.
+        tabler.arrayToHTML ('test',[1,2,3,4],2);
+    Result:
+        12
+        34
+
+tabler.objectToHTML (title, objectList, columnames)
+ 
+    This will show an array of objects by representing each object in 
+    its own row, with the requested properties of said object being
+    shown as the columns.
