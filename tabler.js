@@ -1,15 +1,66 @@
-//This converts an list of object to an table of some kind.
-//Right now I have it convert to HTML but
-//TODO: future versions can convert to CSV or.. something else.
+//TODO:  IF this is going to be of ANY USE to this project is has to be able to show
+// and object table, where the object contains an array..... and at some point in 
+// the future I'll need it to be an object with objects so... 
+// How to show >2 dimensions (needs research).
+
+//NOT A SOLUTION BUT: You could have a table where the weights are shown in a column
+// (its own table) which is the first column of a table where in the second column
+// shows the neuron.. in its own table.  A table of tables.  
+
+
+
+//Makes things into lists (see: "tabler manual.txt")
 const Tabler = function () {
 }
-//"columns" if defined, will treat the array as 1 dimesional and 
+//OK.. so this one takes a list of objects..
+//each row is an object..
+//One column of table is the object's properties...that ARE NOT ARRAYS.
+//all of the other columns are the specified properties that ARE ARRAYS of PRIMITIVES!!
+//DAY 3: I am not enjoying making these data -> html table functions.
+//Also the BOOLEAN at the end is optional, if true it puts the arrays in "front" of the
+//object's column (assuming you read left to right).
+Tabler.prototype.ObjectsWithArraysToHTML = function (title, objectList, properties, arraysLeft){
+    let table = this.getEmpyTableElement(title);
+    
+    
+    
+    
+    /***************** MAKE IT RECURSIVE, IT WILL JUST DO IT */
+    
+    
+    
+    
+    
+    
+    
+    let rowElement = this.getEmptyRowElement();
+    //TODO: Color the properties that correspond to the next tables bgcolor..
+    propertyNames.forEach(property => {
+        let dataElement = this.getEmptyDataElement(true, true, true)
+        dataElement.innerText = property;
+        rowElement.appendChild(dataElement);
+    });
+    table.appendChild(rowElement);
+    objectList.forEach(element => {
+        let rowElement = this.getEmptyRowElement();
+        properties.forEach(property => {
+            if (Array.isArray(property)){
+            dataElement = this.getEmptyDataElement();
+            dataElement.innerText = row[property];
+            rowElement.appendChild(dataElement);
+        }
+    });
+        table.append(rowElement);
+    });
+    return table;
+}
+//"columns" if defined, will treat the array as 1 dimensional and 
 //break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row&column
 Tabler.prototype.arrayToHTML = function (title, array, columns) {
     let table = this.getEmpyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
-        //one dimensional needs to be split into rows..
+        //one dimensional AND wants to be split into rows..
         let rowElement = this.getEmptyRowElement();
         let column = 0;
         for (let i = 0; i < array.length; i++) {
@@ -53,10 +104,10 @@ Tabler.prototype.arrayToHTML = function (title, array, columns) {
     return table;
 }
 
-Tabler.prototype.objectToHTML = function (title, objectList, columnNames) {
+Tabler.prototype.objectToHTML = function (title, objectList, propertyNames) {
     let table = this.getEmpyTableElement(title);
     let rowElement = this.getEmptyRowElement();
-    columnNames.forEach(property => {
+    propertyNames.forEach(property => {
         let dataElement = this.getEmptyDataElement(true, true, true)
         dataElement.innerText = property;
         rowElement.appendChild(dataElement);
@@ -64,7 +115,7 @@ Tabler.prototype.objectToHTML = function (title, objectList, columnNames) {
     table.appendChild(rowElement);
     objectList.forEach(row => {
         let rowElement = this.getEmptyRowElement();
-        columnNames.forEach(property => {
+        propertyNames.forEach(property => {
             dataElement = this.getEmptyDataElement();
             dataElement.innerText = row[property];
             rowElement.appendChild(dataElement);
