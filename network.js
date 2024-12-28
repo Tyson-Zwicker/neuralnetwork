@@ -7,6 +7,8 @@ const Neuron = function () {
 const Network = function (numInputs, numHidden, numOutputs) {
     let hiddenLayer = [];
     let outputLayer = [];
+    //TODO: change numHidden to numHiddenLayers: an array defining multiple size of hidden layers
+
     //Assign random weights to the hidden layer
     for (let i = 0; i < numHidden; i++) {
         let weights = [];
@@ -49,6 +51,7 @@ const sigmoidDerivative = function (input) {
     return input * (1 - input);
 }
 //"inputs" is the array of initial values to be examined by the network.
+//returns the output layer outputs.
 const forwardPropigate = function (network, inputs) {
     //process each layer, from first hidden layer to output layer
     for (let i = 0; i < network.layers.length; i++) {
@@ -79,6 +82,12 @@ const forwardPropigate = function (network, inputs) {
         //Set next layers inputs the ones we just calculated.
         inputs = newInputs;
     }//repeat...
+    let outputLayer = network.layers[network.layers.length - 1];
+    let outputs = [];
+    for (let i = 0; i < outputLayer.length; i++) {
+        outputs.push(i);
+    }
+    return outputs;
 }
 //expected is a list of numbers that the inputs should have produced.
 const backwardPropigate = function (network, expected) {
@@ -100,8 +109,8 @@ const backwardPropigate = function (network, expected) {
             }
         } else {
             //process each neuron in this hidden layer
-            if (!layer){
-                throw new Error (`layer #${i} is ${layer} #layers ${network.layers.length}`);
+            if (!layer) {
+                throw new Error(`layer #${i} is ${layer} #layers ${network.layers.length}`);
             }
             for (let j = 0; j < layer.length; j++) {
                 let neuron = layer[j];
@@ -159,16 +168,18 @@ const updateWeights = function (network, datasetRow, learningRate) {
 const trainNetwork = function (network, dataset, learningRate, numEpochs,
     expectedOutput) {
     let errorRates = [];
+    
     for (let epoch = 0; epoch < numEpochs; epoch++) {
         let sumError = 0;
-        dataset.forEach(row => {
-            let outputs = forwardPropigate(network, row);
-            //TODO: compare outputs to expected output
-            //add the SQUARE of the difference to sumerror
-            for (let i = 0; i < expectedOutput.length; i++) {
+        let datasetRowNumber = 0;
+        dataset.forEach(row => {            
+            let outputs = forwardPropigate(network, row);            
+            
+            //TODO: on a net with more than one output node, this would need to go through all of 
+            //them, so this "outputs[0] would need to become outputs[i] in a loop...
 
-            }
-            sumError += (outputs)
+            sumError += Math.pow(expectedOutput[datasetRowNumber] - outputs[0], 2)
+            datasetRowNumber++;
             backwardPropigate(network, expectedOutput);
             updateWeights(network, row, learningRate);
         });
