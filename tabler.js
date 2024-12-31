@@ -19,20 +19,8 @@ const Tabler = function () {
 //DAY 3: I am not enjoying making these data -> html table functions.
 //Also the BOOLEAN at the end is optional, if true it puts the arrays in "front" of the
 //object's column (assuming you read left to right).
-Tabler.prototype.ObjectsWithArraysToHTML = function (title, objectList, properties, arraysLeft){
+Tabler.prototype.ObjectsWithArraysToHTML = function (title, objectList, propertyNames) {
     let table = this.getEmpyTableElement(title);
-    
-    
-    
-    
-    /***************** MAKE IT RECURSIVE, IT WILL JUST DO IT */
-    
-    
-    
-    
-    
-    
-    
     let rowElement = this.getEmptyRowElement();
     //TODO: Color the properties that correspond to the next tables bgcolor..
     propertyNames.forEach(property => {
@@ -44,12 +32,16 @@ Tabler.prototype.ObjectsWithArraysToHTML = function (title, objectList, properti
     objectList.forEach(element => {
         let rowElement = this.getEmptyRowElement();
         properties.forEach(property => {
-            if (Array.isArray(property)){
-            dataElement = this.getEmptyDataElement();
-            dataElement.innerText = row[property];
-            rowElement.appendChild(dataElement);
-        }
-    });
+            if (Array.isArray(property)) {
+                dataElement = this.getEmptyDataElement();
+                dataElement.innerText = this.arrayToHTML(property,row[property];
+                rowElement.appendChild(dataElement);
+            } else {
+                dataElement = this.getEmptyDataElement();
+                dataElement.innerText = element[property];
+                rowElement.appendChild(dataElement);
+            }
+        });
         table.append(rowElement);
     });
     return table;
@@ -70,7 +62,7 @@ Tabler.prototype.arrayToHTML = function (title, array, columns) {
                 column = 0;
             }
             let dataElement = this.getEmptyDataElement();
-            dataElement.innerText = array[i];            
+            dataElement.innerText = array[i];
             rowElement.appendChild(dataElement);
             column++;
         }
@@ -94,11 +86,10 @@ Tabler.prototype.arrayToHTML = function (title, array, columns) {
                 for (let j = 0; j < array[i].length; j++) {
                     let dataElement = this.getEmptyDataElement();
                     dataElement.innerText = array[i];
-
+                    rowElement.appendChild(dataElement);
                 }
-                rowElement.appendChild(dataElement);
+                table.appendChild(row);
             }
-            table.appendChild(row);
         }
     }
     return table;
