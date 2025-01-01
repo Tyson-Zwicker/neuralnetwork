@@ -13,6 +13,7 @@
     <div id="test3Div" style="font:12px monospace"> </div>
     <div id="test4Div" style="font:12px monospace"> </div>
     <div id="test5Div" style="font:12px monospace"> </div>
+    <div id="test6Div" style="font:12px monospace"> </div>
     <script src='./tabler.js'></script>
     <script>
 
@@ -40,20 +41,24 @@
             { "name": "Gina", "age": 34, "employer": "None", "title": "Cindy's Mom", "fulltime": true },
         ];
         let test2properties = ['name', 'age', "employer", "title", "fulltime"];
-        tabler.title = 'Test #2: bools?'
+        tabler.title = 'Test #2: bools?';
         let test2Div = document.getElementById('test2Div');
         test2Div.appendChild(tabler.objectToHTML("Test #2", test2data, test2properties));
-
         let test34data = [1, 2, 4, 5, 6, 7, 8, 9];
-        let testDiv3 = document.getElementById('testDiv3');
+        let testDiv3 = document.getElementById('test3Div');
         test3Div.appendChild(tabler.arrayToHTML('Test #3', test34data));
-        let testDiv4 = document.getElementById('testDiv4');
+        let testDiv4 = document.getElementById('test4Div');
         test4Div.appendChild(tabler.arrayToHTML('Test #4', test34data, 3));
         let test5data = [[1, 2, 3], ['a', 'b', 'c'], ['x', 'y', 'z']];
-        let testDiv5 = document.getElementById('testDiv5');
+        let testDiv5 = document.getElementById('test5Div');
         test5Div.appendChild(tabler.arrayToHTML('Test #5', test5data));
-
-
+        let test6data = [
+            {'field1':2, "field2":[1,2,3,5,7,11,13,17],"field3":"hello"},
+            {'field1':9, "field2":[2,4,6,8,9,10,12,14],"field3":"world"},
+            {'field1':5, "field2":[1,2,3,4,5,6,7,8],"field3":""}
+        ];
+        let test6Div = document.getElementById ('test6Div');
+        test6Div.appendChild (tabler.ComplexObjectsToHTML('Test #6',test6data, ['field1','field2','field3']));
     </script>
 </body>
 
