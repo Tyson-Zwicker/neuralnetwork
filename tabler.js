@@ -43,7 +43,7 @@ Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyN
 
 //"columns" if defined, will treat the array as 1 dimensional and 
 //break up the table into a grid with specified # of columns.
-//two dimensional arrays will automatically by shown in row&column
+//two dimensional arrays will automatically by shown in row & column
 Tabler.prototype.arrayToHTML = function (title, array, columns) {
     let table = this.getEmpyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
