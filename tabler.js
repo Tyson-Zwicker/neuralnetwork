@@ -12,40 +12,35 @@
 //Makes things into lists (see: "tabler manual.txt")
 const Tabler = function () {
 }
-//OK.. so this one takes a list of objects..
-//each row is an object..
-//One column of table is the object's properties...that ARE NOT ARRAYS.
-//all of the other columns are the specified properties that ARE ARRAYS of PRIMITIVES!!
-//DAY 3: I am not enjoying making these data -> html table functions.
-//Also the BOOLEAN at the end is optional, if true it puts the arrays in "front" of the
-//object's column (assuming you read left to right).
-Tabler.prototype.ObjectsWithArraysToHTML = function (title, objectList, propertyNames) {
+
+//If one of the properties is another object, or array, its calls itself... 
+Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyNames) {
     let table = this.getEmpyTableElement(title);
     let rowElement = this.getEmptyRowElement();
-    //TODO: Color the properties that correspond to the next tables bgcolor..
     propertyNames.forEach(property => {
-        let dataElement = this.getEmptyDataElement(true, true, true)
+        let dataElement = this.getEmptyDataElement(true, true, true);
         dataElement.innerText = property;
         rowElement.appendChild(dataElement);
     });
     table.appendChild(rowElement);
-    objectList.forEach(element => {
+    objectList.forEach(row => {
         let rowElement = this.getEmptyRowElement();
-        properties.forEach(property => {
-            if (Array.isArray(property)) {
+        propertyNames.forEach(property => {
+            if (Array.isArray(element[property])) {
                 dataElement = this.getEmptyDataElement();
-                dataElement.innerText = this.arrayToHTML(property,row[property];
+                dataElement.appendChild (this.arrayToHTML(property, row[property]));
                 rowElement.appendChild(dataElement);
             } else {
                 dataElement = this.getEmptyDataElement();
-                dataElement.innerText = element[property];
+                dataElement.innerText = row[property];
                 rowElement.appendChild(dataElement);
-            }
+            };
         });
         table.append(rowElement);
     });
     return table;
 }
+
 //"columns" if defined, will treat the array as 1 dimensional and 
 //break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row&column
