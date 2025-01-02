@@ -26,7 +26,7 @@ Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyN
     objectList.forEach(row => {
         let rowElement = this.getEmptyRowElement();
         propertyNames.forEach(property => {
-            if (Array.isArray(element[property])) {
+            if (Array.isArray(row[property])) {
                 dataElement = this.getEmptyDataElement();
                 dataElement.appendChild (this.arrayToHTML(property, row[property]));
                 rowElement.appendChild(dataElement);
@@ -44,7 +44,7 @@ Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyN
 //"columns" if defined, will treat the array as 1 dimensional and 
 //break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row & column
-Tabler.prototype.arrayToHTML = function (title, array, columns) {
+Tabler.prototype.arrayToHTML = function (title, array, columns, horizontal) {
     let table = this.getEmpyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
         //one dimensional AND wants to be split into rows..
@@ -67,12 +67,13 @@ Tabler.prototype.arrayToHTML = function (title, array, columns) {
     } else {
         if (!Array.isArray[array[0]]) {
             //Simple 1 dimension..
+            let rowElement = this.getEmptyRowElement();
             for (let i = 0; i < array.length; i++) {
-                let rowElement = this.getEmptyRowElement();
                 let dataElement = this.getEmptyDataElement();
                 dataElement.innerText = array[i];
                 rowElement.appendChild(dataElement);
                 table.appendChild(rowElement);
+                rowElement = this.getEmptyRowElement();
             }
         } else {
             //2 dimensional..
