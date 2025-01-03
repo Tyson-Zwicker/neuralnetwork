@@ -1,4 +1,3 @@
-
 //Makes things into lists (see: "tabler manual.txt")
 const Tabler = function () {
 }
@@ -6,7 +5,7 @@ const Tabler = function () {
 //If you find one of the properties is a object I SHOULD also contain it.  The property name
 //will be the Key and the Value is the list of properties you should show of that object.
 Tabler.prototype.ComplexobjectListToHtmlTable = function (title, objects, properties, innerObjectMap) {
-    let tableElement = this.getEmpyTableElement(title);
+    let tableElement = this.getEmptyTableElement(title);
     let rowElement = this.getEmptyRowElement();
     properties.forEach(propertyName => {
         let dataElement = this.getEmptyDataElement(true, true, true);
@@ -17,12 +16,11 @@ Tabler.prototype.ComplexobjectListToHtmlTable = function (title, objects, proper
     objects.forEach(object => {
         let rowElement = this.getEmptyRowElement();
         properties.forEach(property => {
-            console.log (`what is property ${property}`);
             let dataElement = this.getEmptyDataElement();
             if (Array.isArray(object[property])) {
                 //Its an array..
                 console.log ('found an array');                
-                dataElement.appendChild(this.arrayToHtmlTable(property, object[property]));
+                dataElement.appendChild(this.arrayToHtmlTable(undefined, object[property]));
             } else if (
                 typeof object[property] == 'string' ||
                 typeof object[property] == 'number' ||
@@ -34,17 +32,12 @@ Tabler.prototype.ComplexobjectListToHtmlTable = function (title, objects, proper
                 //It's an object..
                 //so it SHOULD be a key in here..
                 let innerTablePropertyList = innerObjectMap.get(property);
-                console.log(`Map2, key on: ${property} inner properties to show:`);
-                console.log(innerTablePropertyList);
-                console.log('object to show:');
-                console.log(object[property]);
                 let innerTable = this.objectListToHtmlTable('', [object[property]], innerTablePropertyList);
                 let innerTableElement = innerTable;
                 dataElement = this.getEmptyDataElement();
                 dataElement.appendChild(innerTableElement);
             } else {
                 //Its indecipherable.
-                console.log(`Unknown property ${property}`);
                 dataElement.innerText = 'unknown?';
             }
             //Add it to the outer table row..
@@ -59,7 +52,7 @@ Tabler.prototype.ComplexobjectListToHtmlTable = function (title, objects, proper
 
 //If one of the properties is an array.
 Tabler.prototype.ObjectListWithInnerArrayToHtmlTable = function (title, objectList, propertyNames, subObjectProperties) {
-    let table = this.getEmpyTableElement(title);
+    let table = this.getEmptyTableElement(title);
     let rowElement = this.getEmptyRowElement();
     propertyNames.forEach(property => {
         let dataElement = this.getEmptyDataElement(true, true, true);
@@ -88,7 +81,7 @@ Tabler.prototype.ObjectListWithInnerArrayToHtmlTable = function (title, objectLi
 //break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row & column
 Tabler.prototype.arrayToHtmlTable = function (title, array, columns, horizontal) {
-    let table = this.getEmpyTableElement(title);
+    let table = this.getEmptyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
         //one dimensional AND wants to be split into rows..
         let rowElement = this.getEmptyRowElement();
@@ -135,7 +128,7 @@ Tabler.prototype.arrayToHtmlTable = function (title, array, columns, horizontal)
 }
 
 Tabler.prototype.objectListToHtmlTable = function (title, objectList, propertyNames) {
-    let table = this.getEmpyTableElement(title);
+    let table = this.getEmptyTableElement(title);
     let rowElement = this.getEmptyRowElement();
     propertyNames.forEach(property => {
         let dataElement = this.getEmptyDataElement(true, true, true)
@@ -155,7 +148,7 @@ Tabler.prototype.objectListToHtmlTable = function (title, objectList, propertyNa
     return table;
 }
 
-Tabler.prototype.getEmpyTableElement = function (title) {
+Tabler.prototype.getEmptyTableElement = function (title) {
     let table = document.createElement('table');
     table.style.border = '2px solid black';
     table.style.borderCollapse = 'collapse';
