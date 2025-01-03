@@ -11,9 +11,10 @@
     <script src="./network.js"></script>
     <script>
         let x = 1;
+        let tabler = new Tabler();
         function doit() {
             let body = document.getElementsByTagName('body')[0];
-            let tabler = new Tabler();
+
             //make it figure out even or odd by giving to numbers that sum..
             let inputs = [];
             let expected = [];
@@ -27,23 +28,36 @@
             }
             let network = new Network(2, 8, 2);
             //Show initial
-            drawNetwork(network);
+            body.appendChild(drawNetwork('Initial Condition', network, inputs, expected));
             //Forward prop
-            forwardPropigate (network, inputs);
-            drawNetwork(network);
+            //forwardPropigate (network, inputs);
+            //drawNetwork(network);
             //back prop
             //adjust weight
         }
 
-        function drawNetwork(network) {
+        function drawNetwork(title, network, inputs, expected) {
             let div = document.createElement('div');
-            let inputTable = tabler.arrayToHTML(inputs);
-            div.appendChild(inputTable);
-            network.layers.forEach (layer=>{
-                let layerTable = tabler.objectToHTML (layer);
-                div.appendChild (layerTable);
+            let tableElement = tabler.getEmptyTableElement(title);
+            let rowElement = tabler.getEmptyRowElement();
+            let dataElement = tabler.getEmptyDataElement();
+            let inputTable = tabler.arrayToHtmlTable('inputs', inputs);
+            dataElement.appendChild(inputTable);
+            rowElement.appendChild(dataElement);
+            network.layers.forEach(layer => {                
+                let layerTable = tabler.objectListToHtmlTable(
+                    undefined, 
+                    layer, 
+                    ['weights', 'bias', 'output','error']);
+                dataElement = tabler.getEmptyDataElement();
+                dataElement.appendChild(layerTable);
+                rowElement.appendChild(layerTable);
             });
-            let expectedTable = tabler.arrayToHTML (expected);
+            let expectedTable = tabler.arrayToHtmlTable('expected',expected);
+            rowElement.appendChild(expectedTable);
+            tableElement.appendChild(rowElement);
+            div.appendChild(tableElement);
+            return div;
         }
     </script>
 </body>
