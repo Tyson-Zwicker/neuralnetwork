@@ -61,7 +61,7 @@
         ];
         let test6Div = document.getElementById('test6Div');
         let test7data = [
-            { "name": "Abby", "age": 19, "childen": ['Alex'], "biodata": { 'w': '115', 'h': '176', 'eyes': 'brown', 'hair': 'brown' } },
+            { "name": "Abby", "age": 19, "children": ['Alex'], "biodata": { 'w': '115', 'h': '176', 'eyes': 'brown', 'hair': 'brown' } },
             { "name": "Breanne", "age": 32, 'children': ['Bart', 'Caleb', 'Meranda'], "biodata": { 'w': '155', 'h': '151', 'eyes': 'blue', 'hair': 'brown' } },
             { "name": "Cindy", "age": 6, 'children': [], "biodata": { 'w': '39', 'h': '61', 'eyes': 'brown', 'hair': 'brown' } },
             { "name": "Debby", "age": 43, 'children': ['Nancy', 'Karen'], "biodata": { 'w': '215', 'h': '186', 'eyes': 'brown', 'hair': 'brown' } },
@@ -70,8 +70,6 @@
         ];
         let innerObjectMap = new Map();
         innerObjectMap.set('biodata', ['w', 'h', 'eyes', 'hair']);
-        console.log ('map1');
-        console.log (innerObjectMap);
         let test7Div = document.getElementById('test7Div');
         let table7 = tabler.ComplexobjectListToHtmlTable(
             'Test #7',
