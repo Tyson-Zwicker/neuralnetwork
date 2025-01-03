@@ -1,10 +1,6 @@
 
 //Makes things into lists (see: "tabler manual.txt")
 const Tabler = function () {
-
-    //TODO: TOMMORW: Fix this damn thing.  The datastructure is:
-    //innerObjectMap - key = column/"property" of parent, value = referenced object's columns/properties... object is referenced from "objects"..
-
     prototype.ComplexObjectToHTML = function (title, objects, properties, innerObjectMap) {
         let tableElement = this.getEmpyTableElement(title);
         let rowElement = this.getEmptyRowElement();
@@ -20,29 +16,26 @@ const Tabler = function () {
                 if (Array.isArray(object[property])) {
                     dataElement = this.getEmptyDataElement();
                     dataElement.appendChild(this.arrayToHTML(property, object[property]));
-                    rowElement.appendChild(dataElement);
-                } else if (typeof row[property] == 'object') {
-                    //FIXME:find map entry in subObjectProperties.. if not found, show 'object'
-                    innerObjectMap.forEach(function (innerTableObject, innerTableName) {
-                        if (innerTableName == property) {
-                            //This is a table inside the object we are looking at..
-                            //show it..
-                            let innerTableElement = this.objectToHTML('', innerObjectTable,)
+                } else if (typeof object[property] == 'object') {
+                    dataElement = this.getEmptyDataElement();
+                    innerObjectMap.forEach((innerTableProprerties, innerTableName) => {
+                        let found = false;
+                        if (property == innerTableName) {
+                            let innerTableElementElement = this.objectToHTML('', object, innerTableProprerties);
+                            dataElement.appendChild(innerTable);
+                        }
+                        if (!found) {
+                            dataElement.innerText = '*missing*'
                         }
                     });
-                    let innerTable = this.objectToHTML(
-                        '',
-                        row[property],
-                        subObjectProperties.get(property)
-                    );
-                    dataElement.appendChild(innerTable);
                 } else {
                     dataElement.Innertext(row[property]);
                 }
+                rowElement.appendChild(dataElement);
             });
-            rowElement.appendChild(dataElement);
+
         });
-        tableElement.appendChild (rowElement);
+        tableElement.appendChild(rowElement);
     }
     return tableElement;
 }
