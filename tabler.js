@@ -1,47 +1,64 @@
 
 //Makes things into lists (see: "tabler manual.txt")
 const Tabler = function () {
-    prototype.ComplexObjectToHTML = function (title, objects, properties, innerObjectMap) {
-        let tableElement = this.getEmpyTableElement(title);
+}
+//innerObjectMap:
+//If you find one of the properties is a object I SHOULD also contain it.  The property name
+//will be the Key and the Value is the list of properties you should show of that object.
+Tabler.prototype.ComplexobjectListToHtmlTable = function (title, objects, properties, innerObjectMap) {
+    let tableElement = this.getEmpyTableElement(title);
+    let rowElement = this.getEmptyRowElement();
+    properties.forEach(propertyName => {
+        let dataElement = this.getEmptyDataElement(true, true, true);
+        dataElement.innerText = propertyName;
+        rowElement.appendChild(dataElement);
+    });
+    tableElement.appendChild(rowElement);
+    objects.forEach(object => {
         let rowElement = this.getEmptyRowElement();
-        properties.forEach(propertyName => {
-            let dataElement = this.getEmptyDataElement(true, true, true);
-            dataElement.innerText = propertyName;
+        properties.forEach(property => {
+            console.log (`what is property ${property}`);
+            let dataElement = this.getEmptyDataElement();
+            if (Array.isArray(object[property])) {
+                //Its an array..
+                console.log ('found an array');                
+                dataElement.appendChild(this.arrayToHtmlTable(property, object[property]));
+            } else if (
+                typeof object[property] == 'string' ||
+                typeof object[property] == 'number' ||
+                typeof object[property] == 'boolean') {
+                    let value = object[property];
+                    console.log (`found a primitive: ${value}`);
+                dataElement.innerText = value;
+            } else if (typeof object[property] == 'object') {
+                //It's an object..
+                //so it SHOULD be a key in here..
+                let innerTablePropertyList = innerObjectMap.get(property);
+                console.log(`Map2, key on: ${property} inner properties to show:`);
+                console.log(innerTablePropertyList);
+                console.log('object to show:');
+                console.log(object[property]);
+                let innerTable = this.objectListToHtmlTable('', [object[property]], innerTablePropertyList);
+                let innerTableElement = innerTable;
+                dataElement = this.getEmptyDataElement();
+                dataElement.appendChild(innerTableElement);
+            } else {
+                //Its indecipherable.
+                console.log(`Unknown property ${property}`);
+                dataElement.innerText = 'unknown?';
+            }
+            //Add it to the outer table row..
             rowElement.appendChild(dataElement);
         });
         tableElement.appendChild(rowElement);
-        objects.forEach(object => {
-            let rowElement = this.getEmptyRowElement();
-            properties.forEach(property => {
-                if (Array.isArray(object[property])) {
-                    dataElement = this.getEmptyDataElement();
-                    dataElement.appendChild(this.arrayToHTML(property, object[property]));
-                } else if (typeof object[property] == 'object') {
-                    dataElement = this.getEmptyDataElement();
-                    innerObjectMap.forEach((innerTableProprerties, innerTableName) => {
-                        let found = false;
-                        if (property == innerTableName) {
-                            let innerTableElementElement = this.objectToHTML('', object, innerTableProprerties);
-                            dataElement.appendChild(innerTable);
-                        }
-                        if (!found) {
-                            dataElement.innerText = '*missing*'
-                        }
-                    });
-                } else {
-                    dataElement.Innertext(row[property]);
-                }
-                rowElement.appendChild(dataElement);
-            });
-
-        });
-        tableElement.appendChild(rowElement);
-    }
+    });
     return tableElement;
 }
 
+
+
 //If one of the properties is an array.
-Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyNames, subObjectProperties) {
+Tabler.prototype.ObjectListWithInnerArrayToHtmlTable = function (title, objectList, propertyNames, subObjectProperties) {
     let table = this.getEmpyTableElement(title);
     let rowElement = this.getEmptyRowElement();
     propertyNames.forEach(property => {
@@ -55,7 +72,7 @@ Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyN
         propertyNames.forEach(property => {
             if (Array.isArray(row[property])) {
                 dataElement = this.getEmptyDataElement();
-                dataElement.appendChild(this.arrayToHTML(property, row[property]));
+                dataElement.appendChild(this.arrayToHtmlTable(property, row[property]));
                 rowElement.appendChild(dataElement);
             } else {
                 dataElement = this.getEmptyDataElement();
@@ -70,7 +87,7 @@ Tabler.prototype.ObjectsWithArrayToHTML = function (title, objectList, propertyN
 //"columns" if defined, will treat the array as 1 dimensional and 
 //break up the table into a grid with specified # of columns.
 //two dimensional arrays will automatically by shown in row & column
-Tabler.prototype.arrayToHTML = function (title, array, columns, horizontal) {
+Tabler.prototype.arrayToHtmlTable = function (title, array, columns, horizontal) {
     let table = this.getEmpyTableElement(title);
     if (!Array.isArray[array[0]] && columns) {
         //one dimensional AND wants to be split into rows..
@@ -117,7 +134,7 @@ Tabler.prototype.arrayToHTML = function (title, array, columns, horizontal) {
     return table;
 }
 
-Tabler.prototype.objectToHTML = function (title, objectList, propertyNames) {
+Tabler.prototype.objectListToHtmlTable = function (title, objectList, propertyNames) {
     let table = this.getEmpyTableElement(title);
     let rowElement = this.getEmptyRowElement();
     propertyNames.forEach(property => {
