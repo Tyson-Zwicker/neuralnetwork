@@ -1,3 +1,6 @@
+//TODO: Change the namning convetion to plurals.  Its wants array most of the time, not a single
+//object..  (ie. objectsToHTML instead of objectToHTML.. because it show a _list_).
+
 let tabler = new Tabler();
 
 tabler.arrayToHTML (title, array, columns)
@@ -16,3 +19,22 @@ tabler.objectToHTML (title, objectList, columnames)
     This will show an array of objects by representing each object in 
     its own row, with the requested properties of said object being
     shown as the columns.
+
+table.objectsToArrayWithHTML (
+    'Test #6',
+    test6data,
+    ['field1', 'field2', 'field3'])
+);
+
+    If the object happend to have an array it, it will show the array properly.
+
+table.complexObjectToHTML (title, objectList, propertyNames, subObjectProperties)
+
+    If the property is primite, its shows it,
+    If its an array, it shows the first dimesion's values.
+    IF its an object (sub-object) it looks into the "subObjectProperty" 
+        parameter, which is MAP.  Key if the sub-object property you
+        want to be shown and the value is whatever is.  TODO: Its NOT RECURSIVE YET
+        but its going to be soon.
+
+    
